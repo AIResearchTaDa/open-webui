@@ -6,6 +6,7 @@ update_webui.sh
 ollama_data/
 webui_data/
 webui_pipelines/
+pgdata/
 #
 .DS_Store
 node_modules
