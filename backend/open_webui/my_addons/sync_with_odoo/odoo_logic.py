@@ -20,6 +20,12 @@ def _generate_auth_token(secret_key: str) -> str:
 
 
 def check_email_exist(email) -> Optional[Dict[str, Any]]:
+    if MY_ODOO_API_URL is None:  
+        logger.info("❌ MY_ODOO_API_URL is None")
+        return False
+    if MY_ODOO_SECRET_KEY is None:
+        logger.info("❌ MY_ODOO_SECRET_KEY is None")
+        return False
     logger.info(f"--- Send request in: {MY_ODOO_API_URL} ---")
     json = {"email": email}
     token = _generate_auth_token(MY_ODOO_SECRET_KEY)

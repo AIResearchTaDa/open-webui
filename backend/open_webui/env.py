@@ -566,7 +566,7 @@ PIP_PACKAGE_INDEX_OPTIONS = os.getenv("PIP_PACKAGE_INDEX_OPTIONS", "").split()
 EXTERNAL_PWA_MANIFEST_URL = os.environ.get("EXTERNAL_PWA_MANIFEST_URL")
 
 
-TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN")
-TG_CHAT_ID = os.getenv("TG_CHAT_ID")
-MY_ODOO_API_URL = os.getenv("MY_ODOO_API_URL")
-MY_ODOO_SECRET_KEY = os.getenv("MY_ODOO_SECRET_KEY")
+TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN", None)
+TG_CHAT_ID = os.getenv("TG_CHAT_ID", None)
+MY_ODOO_API_URL = os.getenv("MY_ODOO_API_URL", None)
+MY_ODOO_SECRET_KEY = os.getenv("MY_ODOO_SECRET_KEY", None)

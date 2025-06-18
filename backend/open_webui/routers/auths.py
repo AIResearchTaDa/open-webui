@@ -605,16 +605,20 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
         )
 
         try:
-            if role == "pending":
-                await bot.send_message(
-                    TG_CHAT_ID,
-                    f"Користувач {form_data.name} надіслав запит на реєстрацію аккаунта. Почта {form_data.email.lower()}. Посилання на адмін панель з користувачами https://gpt.ta-da.ua/admin/users .",
+            if bot != None and TG_CHAT_ID:
+                log.info(
+                    f"Sending Telegram message for pending user registration: {form_data.name}, {form_data.email.lower()}"
                 )
-            if role == "user":
-                await bot.send_message(
-                    TG_CHAT_ID,
-                    f"Користувач {form_data.name} зареєструвався. Почта {form_data.email.lower()}. Посилання на адмін панель з користувачами https://gpt.ta-da.ua/admin/users .",
-                )
+                if role == "pending":
+                    await bot.send_message(
+                        TG_CHAT_ID,
+                        f"Користувач {form_data.name} надіслав запит на реєстрацію аккаунта. Почта {form_data.email.lower()}. Посилання на адмін панель з користувачами https://gpt.ta-da.ua/admin/users .",
+                    )
+                if role == "user":
+                    await bot.send_message(
+                        TG_CHAT_ID,
+                        f"Користувач {form_data.name} зареєструвався. Почта {form_data.email.lower()}. Посилання на адмін панель з користувачами https://gpt.ta-da.ua/admin/users .",
+                    )
         except Exception as e:
             log.info(f"Error {e}")
 
