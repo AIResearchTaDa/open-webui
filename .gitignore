@@ -307,3 +307,9 @@ dist
 cypress/videos
 cypress/screenshots
 .vscode/settings.json
+
+# Postgres data and logs
+pgdata/
+pg_logs/
+
+webui_data/
