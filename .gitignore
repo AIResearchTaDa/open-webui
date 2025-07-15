@@ -7,6 +7,7 @@ ollama_data/
 webui_data/
 webui_pipelines/
 pgdata/
+grafana_data/
 #
 .DS_Store
 node_modules
