@@ -19,10 +19,10 @@
 
 			if (isDarkMode) {
 				const darkImage = new Image();
-				darkImage.src = '/static/favicon-dark.png';
+				darkImage.src = `${WEBUI_BASE_URL}/static/favicon-dark.png`;
 
 				darkImage.onload = () => {
-					logo.src = '/static/favicon-dark.png';
+					logo.src = `${WEBUI_BASE_URL}/static/favicon-dark.png`;
 					logo.style.filter = ''; // Ensure no inversion is applied if splash-dark.png exists
 				};
 
@@ -47,7 +47,7 @@
 						id="logo"
 						crossorigin="anonymous"
 						src="{WEBUI_BASE_URL}/static/favicon.png"
-						class=" w-6 rounded-full"
+						class="w-7 rounded-full"
 						alt="logo"
 					/>
 				</div>
