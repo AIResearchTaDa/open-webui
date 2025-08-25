@@ -316,3 +316,6 @@ pgdata/
 pg_logs/
 
 webui_data/
+redis-data/
+grafana_data/
+docker-compose.yml
