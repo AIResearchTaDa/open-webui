@@ -8,6 +8,7 @@ webui_data/
 webui_pipelines/
 pgdata/
 grafana_data/
+redis-data/
 #
 x.py
 yarn.lock
