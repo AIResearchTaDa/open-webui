@@ -833,6 +833,7 @@ export const removeFormattings = (str: string) => {
 
 			// Cleanup
 			.replace(/\[\^[^\]]*\]/g, '') // Footnotes
+			.replace(/[-*_~]/g, '') // Remaining markers
 			.replace(/\n{2,}/g, '\n')
 	); // Multiple newlines
 };
@@ -1121,6 +1122,13 @@ export const extractFrontmatter = (content) => {
 // Function to determine the best matching language
 export const bestMatchingLanguage = (supportedLanguages, preferredLanguages, defaultLocale) => {
 	const languages = supportedLanguages.map((lang) => lang.code);
+
+	const hasRU = preferredLanguages.some((l) => l.startsWith('ru'));
+	const hasUK = preferredLanguages.some((l) => l.startsWith('uk'));
+
+	if (hasRU && hasUK && (preferredLanguages[0] === 'ru' || preferredLanguages[0] === 'ru-RU')) {
+		return 'uk-UA';
+	}
 
 	const match = preferredLanguages
 		.map((prefLang) => languages.find((lang) => lang.startsWith(prefLang)))

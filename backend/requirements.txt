@@ -39,6 +39,9 @@ RestrictedPython==8.0
 loguru==0.7.3
 asgiref==3.8.1
 
+#TG bot
+aiogram==3.21.0
+
 # AI libraries
 openai
 anthropic

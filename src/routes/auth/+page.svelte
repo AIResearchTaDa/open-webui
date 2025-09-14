@@ -265,24 +265,24 @@
 									{/if}
 								</div>
 
-								{#if $config?.features.enable_login_form || $config?.features.enable_ldap || form}
-									<div class="flex flex-col mt-4">
-										{#if mode === 'signup'}
-											<div class="mb-2">
-												<label for="name" class="text-sm font-medium text-left mb-1 block"
-													>{$i18n.t('Name')}</label
-												>
-												<input
-													bind:value={name}
-													type="text"
-													id="name"
-													class="my-0.5 w-full text-sm outline-hidden bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-600"
-													autocomplete="name"
-													placeholder={$i18n.t('Enter Your Full Name')}
-													required
-												/>
-											</div>
-										{/if}
+							{#if $config?.features.enable_login_form || $config?.features.enable_ldap || form}
+								<div class="flex flex-col mt-4">
+									{#if mode === 'signup'}
+										<div class="mb-2">
+											<label for="name" class="text-sm font-medium text-left mb-1 block"
+												>{$i18n.t('First and last name')}</label
+											>
+											<input
+												bind:value={name}
+												type="text"
+												id="name"
+												class="my-0.5 w-full text-sm outline-hidden bg-transparent placeholder:text-gray-300 dark:placeholder:text-gray-600"
+												autocomplete="name"
+												placeholder={$i18n.t('Enter your full first and last name')}
+												required
+											/>
+										</div>
+									{/if}
 
 										{#if mode === 'ldap'}
 											<div class="mb-2">

@@ -1,3 +1,15 @@
+backup/
+backup_webui.sh
+docker-compose.yml
+update_webui.sh
+#dd
+ollama_data/
+webui_data/
+webui_pipelines/
+pgdata/
+grafana_data/
+redis-data/
+#
 x.py
 yarn.lock
 .DS_Store
@@ -310,3 +322,7 @@ dist
 cypress/videos
 cypress/screenshots
 .vscode/settings.json
+docker-compose-prod.yml
+docker-compose-test.yaml
+.gitignore
+docker-compose.yml

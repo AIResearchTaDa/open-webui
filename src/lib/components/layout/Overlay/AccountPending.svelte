@@ -15,7 +15,7 @@
 	});
 </script>
 
-<div class="fixed w-full h-full flex z-999">
+<div class="fixed w-full h-full flex z-[999]">
 	<div
 		class="absolute w-full h-full backdrop-blur-lg bg-white/10 dark:bg-gray-900/50 flex justify-center"
 	>
@@ -40,18 +40,10 @@
 					{#if ($config?.ui?.pending_user_overlay_content ?? '').trim() !== ''}
 						{$config.ui.pending_user_overlay_content}
 					{:else}
-						{$i18n.t('Your account status is currently pending activation.')}{'\n'}{$i18n.t(
-							'To access the WebUI, please reach out to the administrator. Admins can manage user statuses from the Admin Panel.'
-						)}
+						{$i18n.t('Wait for confirmation from the administrator within 10 minutes.')}<br />
 					{/if}
 				</div>
-
-				{#if adminDetails}
-					<div class="mt-4 text-sm font-medium text-center">
-						<div>{$i18n.t('Admin')}: {adminDetails.name} ({adminDetails.email})</div>
-					</div>
-				{/if}
-
+				
 				<div class=" mt-6 mx-auto relative group w-fit">
 					<button
 						class="relative z-20 flex px-5 py-2 rounded-full bg-white border border-gray-100 dark:border-none hover:bg-gray-100 text-gray-700 transition font-medium text-sm"

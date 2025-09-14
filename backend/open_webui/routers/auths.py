@@ -21,6 +21,8 @@ from open_webui.models.users import Users, UpdateProfileForm
 from open_webui.models.groups import Groups
 from open_webui.models.oauth_sessions import OAuthSessions
 
+from open_webui.tg_bot.bot_instance import bot
+from open_webui.my_addons.sync_with_odoo.odoo_logic import check_email_exist
 from open_webui.constants import ERROR_MESSAGES, WEBHOOK_MESSAGES
 from open_webui.env import (
     WEBUI_AUTH,
@@ -32,6 +34,7 @@ from open_webui.env import (
     WEBUI_AUTH_SIGNOUT_REDIRECT_URL,
     ENABLE_INITIAL_ADMIN_SIGNUP,
     SRC_LOG_LEVELS,
+    TG_CHAT_ID,
 )
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import RedirectResponse, Response, JSONResponse
@@ -590,7 +593,10 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
         raise HTTPException(400, detail=ERROR_MESSAGES.EMAIL_TAKEN)
 
     try:
-        role = "admin" if not has_users else request.app.state.config.DEFAULT_USER_ROLE
+
+        role = (
+        "admin" if not has_users else "user" if check_email_exist(form_data.email.lower()) else request.app.state.config.DEFAULT_USER_ROLE
+        )
 
         # The password passed to bcrypt must be 72 bytes or fewer. If it is longer, it will be truncated before hashing.
         if len(form_data.password.encode("utf-8")) > 72:
@@ -607,6 +613,24 @@ async def signup(request: Request, response: Response, form_data: SignupForm):
             form_data.profile_image_url,
             role,
         )
+
+        try:
+            if bot != None and TG_CHAT_ID:
+                log.info(
+                    f"Sending Telegram message for pending user registration: {form_data.name}, {form_data.email.lower()}"
+                )
+                if role == "pending":
+                    await bot.send_message(
+                        TG_CHAT_ID,
+                        f"Користувач {form_data.name} надіслав запит на реєстрацію аккаунта. Почта {form_data.email.lower()}. Посилання на адмін панель з користувачами https://gpt.ta-da.ua/admin/users .",
+                    )
+                if role == "user":
+                    await bot.send_message(
+                        TG_CHAT_ID,
+                        f"Користувач {form_data.name} зареєструвався. Почта {form_data.email.lower()}. Посилання на адмін панель з користувачами https://gpt.ta-da.ua/admin/users .",
+                    )
+        except Exception as e:
+            log.info(f"Error {e}")
 
         if user:
             expires_delta = parse_duration(request.app.state.config.JWT_EXPIRES_IN)
