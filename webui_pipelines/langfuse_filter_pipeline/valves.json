@@ -1,0 +1,1 @@
+{"pipelines": ["*"], "priority": 0, "secret_key": "sk-lf-c95d8ffb-40f8-4101-80de-a35adc8daae6", "public_key": "pk-lf-1357c478-f0ee-4097-8781-b45952ad6c68", "host": "http://10.2.0.171:3000", "insert_tags": true, "use_model_name_instead_of_id_for_generation": false, "debug": true}
