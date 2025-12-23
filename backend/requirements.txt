@@ -37,7 +37,7 @@ loguru==0.7.3
 asgiref==3.11.0
 
 #TG bot
-aiogram==3.21.0
+aiogram
 
 # AI libraries
 tiktoken
