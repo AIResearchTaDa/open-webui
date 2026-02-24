@@ -704,14 +704,9 @@ async def signup_handler(
     Returns the newly created UserModel.
     Raises HTTPException on failure.
     """
-    has_users = Users.has_users(db=db)
-    role = (
-        "admin"
-        if not has_users
-        else "user"
-        if check_email_exist(email.lower())
-        else request.app.state.config.DEFAULT_USER_ROLE
-    )
+    # Insert with default role first to avoid TOCTOU race on first signup.
+    # If has_users() is checked before insert, concurrent requests during
+    # first-user registration can all see an empty table and each get admin.
     hashed = get_password_hash(password)
 
     user = Auths.insert_new_auth(
@@ -719,11 +714,24 @@ async def signup_handler(
         password=hashed,
         name=name,
         profile_image_url=profile_image_url,
-        role=role,
+        role=request.app.state.config.DEFAULT_USER_ROLE,
         db=db,
     )
     if not user:
         raise HTTPException(500, detail=ERROR_MESSAGES.CREATE_USER_ERROR)
+
+    # Atomically check if this is the only user *after* the insert.
+    # Only the single user present at this point should become admin.
+    if Users.get_num_users(db=db) == 1:
+        Users.update_user_role_by_id(user.id, "admin", db=db)
+        user = Users.get_user_by_id(user.id, db=db)
+        request.app.state.config.ENABLE_SIGNUP = False
+    elif check_email_exist(email.lower()):
+        # Auto-accept users whose email exists in Odoo
+        Users.update_user_role_by_id(user.id, "user", db=db)
+        user = Users.get_user_by_id(user.id, db=db)
+
+    role = user.role
 
     try:
         if bot is not None and TG_CHAT_ID:
@@ -754,10 +762,6 @@ async def signup_handler(
                 "user": user.model_dump_json(exclude_none=True),
             },
         )
-
-    if not has_users:
-        # Disable signup after the first user is created
-        request.app.state.config.ENABLE_SIGNUP = False
 
     apply_default_group_assignment(
         request.app.state.config.DEFAULT_GROUP_ID,
@@ -1181,8 +1185,6 @@ async def update_ldap_server(
         "host",
         "attribute_for_mail",
         "attribute_for_username",
-        "app_dn",
-        "app_dn_password",
         "search_base",
     ]
     for key in required_fields:
@@ -1197,8 +1199,8 @@ async def update_ldap_server(
     request.app.state.config.LDAP_ATTRIBUTE_FOR_USERNAME = (
         form_data.attribute_for_username
     )
-    request.app.state.config.LDAP_APP_DN = form_data.app_dn
-    request.app.state.config.LDAP_APP_PASSWORD = form_data.app_dn_password
+    request.app.state.config.LDAP_APP_DN = form_data.app_dn or ""
+    request.app.state.config.LDAP_APP_PASSWORD = form_data.app_dn_password or ""
     request.app.state.config.LDAP_SEARCH_BASE = form_data.search_base
     request.app.state.config.LDAP_SEARCH_FILTERS = form_data.search_filters
     request.app.state.config.LDAP_USE_TLS = form_data.use_tls
