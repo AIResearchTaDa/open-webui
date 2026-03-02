@@ -1042,8 +1042,25 @@ PIP_PACKAGE_INDEX_OPTIONS = os.getenv("PIP_PACKAGE_INDEX_OPTIONS", "").split()
 
 EXTERNAL_PWA_MANIFEST_URL = os.environ.get("EXTERNAL_PWA_MANIFEST_URL")
 
+####################################
+# MY OWN TG BOT CHECK
+####################################
 
 TG_BOT_TOKEN = os.getenv("TG_BOT_TOKEN", None)
 TG_CHAT_ID = os.getenv("TG_CHAT_ID", None)
 MY_ODOO_API_URL = os.getenv("MY_ODOO_API_URL", None)
 MY_ODOO_SECRET_KEY = os.getenv("MY_ODOO_SECRET_KEY", None)
+
+
+####################################
+# GROUP DEFAULTS
+####################################
+
+# Controls the default "Who can share to this group" setting for new groups.
+# Env var values: "true" (anyone), "false" (no one), "members" (only group members).
+_default_group_share = (
+    os.environ.get("DEFAULT_GROUP_SHARE_PERMISSION", "members").strip().lower()
+)
+DEFAULT_GROUP_SHARE_PERMISSION = (
+    "members" if _default_group_share == "members" else _default_group_share == "true"
+)
