@@ -14,8 +14,11 @@ const createI18nStore = (i18n: i18nType) => {
 		i18nWritable.set(i18n);
 	});
 	i18n.on('added', () => i18nWritable.set(i18n));
-	i18n.on('languageChanged', () => {
+	i18n.on('languageChanged', (lang) => {
 		i18nWritable.set(i18n);
+		if (typeof document !== 'undefined') {
+			document.documentElement.setAttribute('lang', lang);
+		}
 	});
 	return i18nWritable;
 };
